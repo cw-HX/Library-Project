@@ -50,16 +50,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'library_project.wsgi.application'
 
-import dj_database_url
-
-import dj_database_url
-
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'library',  # or parse from URI
+        'NAME': 'library',
         'CLIENT': {
-            'host': MONGODB_URI or 'mongodb://localhost:27017/library',
+            'host': 'mongodb://localhost:27017/library',
         }
     }
 }
