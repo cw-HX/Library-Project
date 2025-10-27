@@ -1,0 +1,5 @@
+Django>=3.2,<6
+mongoengine>=0.24.0
+pymongo>=4.0
+pytz
+python-dotenv>=1.0

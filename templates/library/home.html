@@ -1,0 +1,21 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+  <h1>Catalog</h1>
+  <div class="row">
+    {% for book in books %}
+    <div class="col-md-4 mb-3">
+      <div class="card h-100">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ book.title }}</h5>
+          <p class="card-text">{{ book.author }} — {{ book.genre }}</p>
+          <p class="card-text">Available: {{ book.available_copies }} / {{ book.total_copies }}</p>
+          <a href="{% url 'library:book_detail' book.pk %}" class="btn btn-primary mt-auto">Details</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p>No books in catalog.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

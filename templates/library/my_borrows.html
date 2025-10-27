@@ -1,0 +1,50 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+  <h2>{% if is_staff %}All Users' Borrowed Books{% else %}My Borrowed Books{% endif %}</h2>
+
+  {% if is_staff %}
+    {% if user_borrows %}
+      {% for user, borrows in user_borrows.items %}
+        <div class="card mb-3">
+          <div class="card-header">
+            <strong>{{ user.username }}</strong> &lt;{{ user.email }}&gt;
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for r in borrows %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{{ r.book_title }}</strong><br>
+                  <small>Borrowed: {{ r.borrow_date|date:'SHORT_DATETIME_FORMAT' }}</small>
+                </div>
+                <div>
+                  <a href="{% url 'library:return_book' r.pk %}" class="btn btn-sm btn-warning">Mark returned</a>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No active borrows.</p>
+    {% endif %}
+
+  {% else %}
+    <div class="list-group">
+      {% for r in records %}
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ r.book_title }}</strong><br>
+            <small>Borrowed: {{ r.borrow_date|date:'SHORT_DATETIME_FORMAT' }}</small>
+          </div>
+          <div>
+            <a href="{% url 'library:return_book' r.pk %}" class="btn btn-sm btn-warning">Return</a>
+          </div>
+        </div>
+      {% empty %}
+        <p>You have no borrowed books.</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="alert alert-danger">
+      <h5>Database unavailable</h5>
+      <p>The application could not connect to MongoDB. Some features (books and borrows) are unavailable.</p>
+      {% if mongo_error %}
+        <pre>{{ mongo_error }}</pre>
+      {% endif %}
+      <p>Please check your <code>MONGODB_URI</code>, Atlas user credentials and network access list.</p>
+    </div>
+  </div>
+{% endblock %}

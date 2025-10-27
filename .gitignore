@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+.venv-2/
+
+# Ignore library migration files (keep __init__)
+library/migrations/
+!library/migrations/__init__.py
+
+# Local env and MongoDB URI
+.env
+mongodb_uri.txt
+
+# Local SQLite DB
+db.sqlite3

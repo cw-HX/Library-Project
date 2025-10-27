@@ -1,0 +1,21 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+  <h2>{{ book.title }}</h2>
+  <p><strong>Author:</strong> {{ book.author }}</p>
+  <p><strong>Genre:</strong> {{ book.genre }}</p>
+  <p><strong>Available:</strong> {{ book.available_copies }} / {{ book.total_copies }}</p>
+
+  {% if user.is_authenticated %}
+    {% if already_borrowed %}
+      <p class="text-warning">You have already borrowed this book.</p>
+    {% elif can_borrow %}
+      <a href="{% url 'library:borrow_book' book.pk %}" class="btn btn-success">Borrow</a>
+    {% else %}
+      <button class="btn btn-secondary" disabled>Not available</button>
+    {% endif %}
+  {% else %}
+    <p><a href="{% url 'library:login' %}">Log in</a> to borrow.</p>
+  {% endif %}
+
+{% endblock %}

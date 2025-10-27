@@ -1,0 +1,25 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+  <h2>All Books (Admin)</h2>
+  <a class="btn btn-primary mb-3" href="{% url 'library:admin_add_book' %}">Add Book</a>
+  <table class="table table-striped">
+    <thead><tr><th>Title</th><th>Author</th><th>Genre</th><th>Total</th><th>Borrowed</th><th>Available</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for b in books %}
+      <tr>
+        <td>{{ b.title }}</td>
+        <td>{{ b.author }}</td>
+        <td>{{ b.genre }}</td>
+        <td>{{ b.total_copies }}</td>
+        <td>{{ b.borrowed_count }}</td>
+        <td>{{ b.available_copies }}</td>
+        <td>
+          <a class="btn btn-sm btn-secondary" href="{% url 'library:admin_edit_book' b.pk %}">Edit</a>
+          <a class="btn btn-sm btn-danger" href="{% url 'library:admin_delete_book' b.pk %}">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
