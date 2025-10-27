@@ -52,8 +52,16 @@ WSGI_APPLICATION = 'library_project.wsgi.application'
 
 import dj_database_url
 
+import dj_database_url
+
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3'))
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'library',  # or parse from URI
+        'CLIENT': {
+            'host': MONGODB_URI or 'mongodb://localhost:27017/library',
+        }
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -108,6 +116,17 @@ try:
     import pymongo
 
     MONGODB_URI = get_mongodb_uri()
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'djongo',
+            'NAME': 'library',
+            'CLIENT': {
+                'host': MONGODB_URI or 'mongodb://localhost:27017/library',
+            }
+        }
+    }
+
     try:
         if MONGODB_URI:
             connect(host=MONGODB_URI)
