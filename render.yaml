@@ -2,8 +2,8 @@ services:
   - type: web
     name: library-web
     env: python
-    region: oregon
-    repo: https://github.com/<your-org>/<your-repo>
+    region: India
+    repo: https://github.com/cw-HX/Library-Project
     branch: main
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
     startCommand: gunicorn library_project.wsgi:application --bind 0.0.0.0:$PORT
