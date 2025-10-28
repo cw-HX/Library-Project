@@ -1,14 +1,17 @@
 import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-demo-secret-key-change-this'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-demo-secret-key-change-this')
 
-DEBUG = False
+# Read DEBUG from environment (default False). Accepts common truthy values.
+DEBUG = str(os.environ.get('DEBUG', 'False')).lower() in ('1', 'true', 'yes')
 
-ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1']
+# ALLOWED_HOSTS may be provided as a comma-separated env var; default to localhost
+ALLOWED_HOSTS = [h.strip() for h in os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if h.strip()]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -22,6 +25,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # Whitenoise middleware (serves static files in production)
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -51,13 +56,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'library_project.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'library',
-        'CLIENT': {
-            'host': 'mongodb://localhost:27017/library',
-        }
-    }
+    # Use DATABASE_URL env var when available (Render/Postgres), otherwise fall back to local sqlite file
+    'default': dj_database_url.parse(os.environ.get('DATABASE_URL', f"sqlite:///{BASE_DIR / 'db.sqlite3'}"))
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -86,6 +86,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -112,16 +113,6 @@ try:
     import pymongo
 
     MONGODB_URI = get_mongodb_uri()
-
-    DATABASES = {
-        'default': {
-            'ENGINE': 'djongo',
-            'NAME': 'library',
-            'CLIENT': {
-                'host': MONGODB_URI or 'mongodb://localhost:27017/library',
-            }
-        }
-    }
 
     try:
         if MONGODB_URI:

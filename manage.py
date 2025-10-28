@@ -25,6 +25,5 @@ def main():
     # Pass the command-line arguments to Django's command dispatcher.
     execute_from_command_line(sys.argv)
 
-
 if __name__ == '__main__':
     main()
