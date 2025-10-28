@@ -13,7 +13,7 @@ services:
       - key: DEBUG
         value: "false"
       - key: MONGODB_URI
-        value: ""
+        value: "mongodb+srv://abhi991:BcvY27OU7nM6ZlV8@library.khrrfqj.mongodb.net/<defaultDB>"
       - key: DATABASE_URL
         value: ""
 services:
