@@ -2,9 +2,10 @@ services:
   - type: web
     name: library-web
     env: python
-    region: India
+    region: oregon
     repo: https://github.com/cw-HX/Library-Project
     branch: main
+    plan: free
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
     startCommand: gunicorn library_project.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
@@ -16,33 +17,4 @@ services:
         value: ""
       - key: DATABASE_URL
         value: ""
-      # Leave value blank here and set a secret in the Render dashboard instead of committing it.
-      autoDeploy: true
-services:
-  # 1. The MongoDB Database
-  - type: pserv
-    name: library-mongo
-    env: mongodb # This specifies a MongoDB service
-    plan: free   # Use the free tier
-
-  # 2. The Django Web Service
-  - type: web
-    name: library-project
-    env: python
-    plan: free # Use the free tier
-    buildCommand: |
-      pip install -r requirements.txt
-      python manage.py collectstatic --noinput
-    startCommand: gunicorn library_project.wsgi:application
-    envVars:
-      - key: DATABASE_URL
-        fromService:
-          type: pserv
-          name: library-mongo
-          property: mongodb+srv://abhi991:BcvY27OU7nM6ZlV8@library.khrrfqj.mongodb.net/<defaultDB>
-      - key: SECRET_KEY
-        generateValue: true # Automatically generates a secure secret key
-      - key: PYTHON_VERSION
-        value: 3.12.0 # Make sure this matches your Python version
-      - key: DEBUG
-        value: False
+    autoDeploy: true

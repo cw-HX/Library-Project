@@ -1,3 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.env
+mongodb_uri.txt
+
+# Virtual environments
+venv*/
+.venv*/
+
+# Django
+*.sqlite3
+staticfiles/
+
+# IDE/editor
+.vscode/
+.idea/
 __pycache__/
 *.py[cod]
 
