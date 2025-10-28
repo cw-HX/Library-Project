@@ -13,9 +13,11 @@ services:
       - key: DEBUG
         value: "false"
       - key: MONGODB_URI
-        value: "mongodb+srv://abhi991:BcvY27OU7nM6ZlV8@library.khrrfqj.mongodb.net/<defaultDB>"
+        value: ""
       - key: DATABASE_URL
         value: ""
+      # Leave value blank here and set a secret in the Render dashboard instead of committing it.
+      autoDeploy: true
 services:
   # 1. The MongoDB Database
   - type: pserv
