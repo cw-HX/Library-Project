@@ -115,38 +115,46 @@ This project uses a small, pragmatic stack chosen to make local development fast
 
 If you'd like, I can expand this section further with a comparison table (pros/cons) for MongoDB vs PostgreSQL for this app or provide example connection/security settings for production.
 
-## ER diagram (text)
-Note: models live both as Django models (migrated tables) and MongoEngine documents. Below is a simplified combined view.
+## Note: models live both as Django models (migrated tables) and MongoEngine documents. Below is a Mermaid ER diagram representing the same entities and relationships.
 
-Entities:
-- User (Django auth.User): id (PK), username, email, is_staff, password_hash
-- Book (Mongo document): _id (ObjectId), title, author, genre, total_copies, created_at
-- BorrowRecord (Mongo document): _id (ObjectId), user_id (int -> Django.User.id), book_id (ObjectId -> Book._id), borrow_date, returned (bool), return_date
+```mermaid
+erDiagram
+	USER {
+		integer id PK "Django auth.User.id"
+		string username
+		string email
+		boolean is_staff
+	}
 
-Relationships:
-- User 1..* BorrowRecord (User.id -> BorrowRecord.user_id)
-- Book 1..* BorrowRecord (Book._id -> BorrowRecord.book_id)
+	BOOK {
+		string _id PK "ObjectId"
+		string title
+		string author
+		string genre
+		integer total_copies
+		datetime created_at
+	}
 
-Simple ASCII ER (readable):
+	BORROW_RECORD {
+		string _id PK "ObjectId"
+		integer user_id FK "references USER.id"
+		string book_id FK "references BOOK._id"
+		datetime borrow_date
+		boolean returned
+		datetime return_date
+	}
 
-User (SQL)
-	[id PK]
-		 |
-		 | 1..*
-BorrowRecord (Mongo)
-	[_id]
-	user_id -> User.id
-	book_id -> Book._id
-	borrow_date
-	returned
-	return_date
-		 |
-		 | *..1
-Book (Mongo)
-	[_id PK]
-	title
-	author
-	total_copies
+	USER ||--o{ BORROW_RECORD : "has"
+	BOOK ||--o{ BORROW_RECORD : "is_referenced_by"
+```
+
+Explanation:
+- `USER` is the Django `auth.User` table (relational). Primary key: `id` (integer).
+- `BOOK` and `BORROW_RECORD` are MongoDB documents (MongoEngine). Primary keys: `_id` (ObjectId).
+- Relationships:
+  - A single `USER` can have many `BORROW_RECORD`s (1..*).
+  - A single `BOOK` can be referenced by many `BORROW_RECORD`s (1..*).
+
 
 ## API endpoints (high-level)
 The project primarily serves HTML pages, but views correspond to logical routes you can call from forms or via REST-like requests.
@@ -230,5 +238,4 @@ Troubleshooting
 - If static files 404: confirm `collectstatic` ran during build and that `whitenoise.middleware.WhiteNoiseMiddleware` is in `MIDDLEWARE`.
 - If MongoDB auth fails: verify `MONGODB_URI`, and temporarily allow access from Render's IPs in Atlas (or whitelist 0.0.0.0/0 for testing only).
 
-If you want, I can commit a tuned `render.yaml` with your GitHub repo URL and add a small `Procfile` or GitHub action to automatically deploy on push.
 
